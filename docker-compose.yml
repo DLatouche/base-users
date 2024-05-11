@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: DB_base_users
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - base-users-data:/var/lib/postgresql/data
+
+volumes:
+  base-users-data:
+#export $(cat .env | xargs)
+#docker exec -it DB_base_users psql -U $DB_USER -d $DB_DATABASE
+
