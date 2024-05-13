@@ -1,6 +1,6 @@
 # Base users
 
-[Base users](https://github.com/DLatouche/base-users) is a project comprising the basics of a web application with user management (authentication, administration dashboard, settings) using AdonisJS with Inertia and React. It's a base that can be reused to create other web applications.
+[Base users](https://github.com/DLatouche/base-users) is a project comprising the basics of a web application with user management (authentication, administration dashboard, settings) using AdonisJS with Inertia and React. It's a base that can be reused to create other web applications. This application uses server-side rendering.
 
 ---
 
