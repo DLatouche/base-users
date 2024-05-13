@@ -8,12 +8,10 @@ import { createInertiaApp } from '@inertiajs/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import { AppLayout } from '@/components/layouts/app_layout'
 
-const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
-
 createInertiaApp({
   progress: { color: '#5468FF' },
 
-  title: (title) => `${title} - ${appName}`,
+  title: () => `Base Users`,
 
   resolve: async (name) => {
     const page = await resolvePageComponent(
