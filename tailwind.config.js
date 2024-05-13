@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-const { fontFamily } = require('tailwindcss/defaultTheme')
 
 export default {
   content: ['./inertia/**/*.tsx'],
@@ -12,6 +11,17 @@ export default {
       },
     },
     extend: {
+      width: {
+        adminLeftMenuOpen: '220px',
+        adminLeftMenuClose: '70px',
+        adminOpen: 'calc(100vw - 220px)',
+        adminClose: 'calc(100vw - 70px)',
+      },
+      padding: {
+        topMenu: '100px',
+        topMenuMobile: '40px',
+        adminTopMenu: '84px',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
