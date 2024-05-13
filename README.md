@@ -84,7 +84,7 @@ Then, go to <a target="blank" name="http://localhost:3333">localhost:3333</a>
 
 ## <a name="technologies">Technologies</a>
 
-- <a name="[https://www.typescriptlang.org/docs/handbook/react.html](https://www.typescriptlang.org/docs/handbook/react.html)">Typescript</a> : to improve the quality and robustness of your JavaScript code with types.
+- <a name="[https://www.typescriptlang.org/docs/handbook/react.html](https://www.typescriptlang.org/docs/handbook/react.html)">Typescript</a> : To improve the quality and robustness of your JavaScript code with types.
 - <a name="[https://docs.adonisjs.com/guides/preface/introduction](https://docs.adonisjs.com/guides/preface/introduction)">Adonis</a> : To create a fullstack Typescript application with a pleasant development experience
 - <a name="[https://inertiajs.com/](https://inertiajs.com/)">Inertia</a> : To use React and simplify interaction with the server
 - <a name="[https://react.dev/](https://react.dev/)">React</a> : Mastery of the framework, desire to use it with adonis
