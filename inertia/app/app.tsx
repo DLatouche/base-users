@@ -2,6 +2,7 @@
 
 import '../css/app.css'
 import '../css/themes.css'
+import '../css/scrollbar.css'
 import { hydrateRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
