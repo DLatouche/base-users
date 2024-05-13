@@ -1,0 +1,23 @@
+{{{
+  exports({
+    to: path
+  })
+}}}
+
+import type { HttpContext } from '@adonisjs/core/http'
+import { inject } from '@adonisjs/core'
+import {{nameUpper}}sService from '#services/{{name}}_service'
+
+@inject()
+export default class {{nameUpper}}sController {
+  constructor(private {{name}}sService: {{nameUpper}}sService) {}
+
+  async getAll({ response, bouncer, request }: HttpContext) {
+    const data = await getAll{{nameUpper}}sValidator.validate(request.all())
+    if (await bouncer.allows(getAll{{nameUpper}}sBouncer)) {
+      const {{name}}s = await this.{{name}}sService.getAll{{nameUpper}}s(data)
+      return response.json({{name}}s)
+    }
+    return response.forbidden()
+  }
+}

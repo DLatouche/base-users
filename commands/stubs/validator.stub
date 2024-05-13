@@ -1,0 +1,15 @@
+{{{
+  exports({
+    to: path
+  })
+}}}
+
+import vine from '@vinejs/vine'
+import { Infer } from '@vinejs/vine/types'
+
+export const create{{nameUpper}}Validator = vine.compile(
+  vine.object({
+    name: vine.string().trim().escape()
+  })
+)
+export type Create{{nameUpper}} = Infer<typeof create{{nameUpper}}Validator>
