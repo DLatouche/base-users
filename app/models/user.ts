@@ -1,8 +1,11 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, computed } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+import Role from './role.js'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { roles } from '../../enums/roles.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -10,21 +13,24 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 })
 
 export default class User extends compose(BaseModel, AuthFinder) {
-  @column({ isPrimary: true })
-  declare id: number
+  @column({ isPrimary: true }) declare id: string
 
-  @column()
-  declare fullName: string | null
+  @column() declare roleId: string
 
-  @column()
-  declare email: string
+  @column() declare emailVerified: boolean
+  @column() declare username: string
+  @column() declare email: string
+  @column() declare avatar: string
 
-  @column()
-  declare password: string
+  @column.dateTime() declare lastConnexion: DateTime | null
 
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
+  @column.dateTime({ autoCreate: true, autoUpdate: true }) declare updatedAt: DateTime | null
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
+  @computed()
+  get isAdmin() {
+    return this.roleId === roles.admin.id
+  }
+
+  @belongsTo(() => Role)
+  declare role: BelongsTo<typeof Role>
 }
