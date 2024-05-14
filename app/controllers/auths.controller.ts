@@ -19,6 +19,7 @@ export default class AuthsController {
     try {
       const data = await emailRegisterValidator.validate(request.all())
       await this.authsService.emailRegister(data)
+      session.flash(`success.register`, 'Inscription réussie')
       return response.redirect().toRoute('/auth/registered')
     } catch (error) {
       console.log('auths.controller.ts (21) -> error', error.code, '->', error.message)

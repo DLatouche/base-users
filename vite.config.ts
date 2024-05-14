@@ -21,6 +21,7 @@ export default defineConfig({
       '@/components/': `${getDirname(import.meta.url)}/inertia/components/`,
       '@/components/ui': `${getDirname(import.meta.url)}/inertia/components/ui`,
       '@/utils/': `${getDirname(import.meta.url)}/inertia/utils/`,
+      '@/hooks/': `${getDirname(import.meta.url)}/inertia/hooks/`,
     },
   },
 })

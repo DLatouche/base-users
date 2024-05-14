@@ -11,6 +11,7 @@ export default defineConfig({
    */
   sharedData: {
     errors: (ctx) => ctx.session?.flashMessages.get('errors'),
+    success: (ctx) => ctx.session?.flashMessages.get('success'),
   },
 
   /**
@@ -18,6 +19,6 @@ export default defineConfig({
    */
   ssr: {
     enabled: true,
-    entrypoint: 'inertia/app/ssr.tsx'
-  }
+    entrypoint: 'inertia/app/ssr.tsx',
+  },
 })

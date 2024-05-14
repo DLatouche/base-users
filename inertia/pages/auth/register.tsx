@@ -16,6 +16,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRef } from 'react'
 import { Link, router, usePage } from '@inertiajs/react'
+import { useErrors } from '@/hooks/use_errors'
 
 const formSchema = z
   .object({
@@ -31,6 +32,7 @@ const formSchema = z
 
 const Register = () => {
   const { SITE_KEY } = usePage().props
+  useErrors(usePage().props, "Une erreur est survenue lors de l'inscription")
   const refCaptcha = useRef<HCaptcha>(null)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

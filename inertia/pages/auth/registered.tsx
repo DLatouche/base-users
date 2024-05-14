@@ -1,9 +1,12 @@
 import { MenuLayout } from '@/components/layouts/menu_layout.tsx/menu_layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useSuccess } from '@/hooks/use_success'
 
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 
 const Registered = () => {
+  useSuccess(usePage().props, 'register', 'Inscription réussie')
+
   return (
     <MenuLayout className="!pt-0 h-screen">
       <div className="flex flex-col justify-center items-center h-full">
