@@ -18,6 +18,9 @@ router
     router.get('register', [AuthsController, 'showRegister'])
     router.get('registered', [AuthsController, 'showRegistered'])
     router.post('email/register', [AuthsController, 'emailRegister'])
+
+    router.get('email/verify', [AuthsController, 'verifyEmail'])
+    router.get('email/verifyError', [AuthsController, 'showVerifyError'])
   })
   .prefix('auth/')
   .use(middleware.guest())

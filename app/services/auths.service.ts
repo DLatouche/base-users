@@ -16,6 +16,7 @@ export default class AuthsService {
     private tokensService: TokensService,
     private emailsService: EmailsService
   ) {}
+
   async emailRegister(data: EmailRegister & { roleId?: string }) {
     // check if email is already registered (on users table and auths table)
     const alreadyHasUser = await User.query().where('email', data.email).first()
@@ -58,5 +59,10 @@ export default class AuthsService {
       await trx.rollback()
       throw error
     }
+  }
+
+  async verifyEmail(token: string) {
+    const user = this.tokensService.verifyEmail(token)
+    return user
   }
 }

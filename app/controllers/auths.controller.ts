@@ -1,7 +1,7 @@
 import { inject } from '@adonisjs/core'
 import AuthsService from '#services/auths.service'
 import { HttpContext } from '@adonisjs/core/http'
-import { emailRegisterValidator } from '#validators/auths.validator'
+import { emailRegisterValidator, emailVerifyValidator } from '#validators/auths.validator'
 
 @inject()
 export default class AuthsController {
@@ -15,6 +15,10 @@ export default class AuthsController {
     return inertia.render('auth/registered')
   }
 
+  public async showVerifyError({ inertia }: HttpContext) {
+    return inertia.render('auth/verify_error')
+  }
+
   public async emailRegister({ request, response, session }: HttpContext) {
     try {
       const data = await emailRegisterValidator.validate(request.all())
@@ -25,6 +29,18 @@ export default class AuthsController {
       console.log('auths.controller.ts (21) -> error', error.code, '->', error.message)
       session.flash(`errors.${error.code}`, error)
       return response.redirect().back()
+    }
+  }
+
+  public async verifyEmail({ request, response, session, inertia }: HttpContext) {
+    try {
+      const data = await emailVerifyValidator.validate(request.all())
+      await this.authsService.verifyEmail(data.token)
+      return inertia.render('auth/verify')
+    } catch (error) {
+      console.log('%auths.controller.ts (41) -> error', error)
+      session.flash(`errors.${error.code}`, error)
+      return response.redirect().toRoute('/auth/email/verifyError')
     }
   }
 }
