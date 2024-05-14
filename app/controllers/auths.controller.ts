@@ -81,4 +81,35 @@ export default class AuthsController {
       return response.redirect().toRoute('/auth/email/verifyError')
     }
   }
+
+  async googleRedirect({ ally, request, session }: HttpContext) {
+    // source is used to redirect to the correct page after login
+    const source = request.qs().source
+    session.put('source', source)
+    return ally.use('google').redirect()
+  }
+
+  async googleCallback({ ally, session, auth, response }: HttpContext) {
+    const source = session.get('source')
+    // source is used to redirect to the correct page after login like admin dashboard
+    const pathToRedirect = source === 'admin' ? '/admin/dashboard' : '/'
+    const google = ally.use('google')
+    if (google.accessDenied()) {
+      session.flash({ type: 'error', message: 'Access was denied' })
+      return response.redirect().toRoute(pathToRedirect)
+    }
+    if (google.stateMisMatch()) {
+      session.flash({ type: 'error', message: 'Request expired. Retry again' })
+      return response.redirect().toRoute(pathToRedirect)
+    }
+    if (google.hasError()) {
+      session.flash({ type: 'error', message: google.getError()?.toString() ?? 'unknown error' })
+      return response.redirect().toRoute(pathToRedirect)
+    }
+
+    const googleUser = await google.user()
+    const user = await this.authsService.googleLogin(googleUser)
+    await auth.use('web').login(user)
+    return response.redirect().toRoute(pathToRedirect)
+  }
 }

@@ -9,6 +9,9 @@ import { providers } from '../../enums/providers.js'
 import TokensService from './tokens.service.js'
 import { inject } from '@adonisjs/core'
 import EmailsService from './emails.service.js'
+import { GoogleUser } from '../../type/google.js'
+import { DateTime } from 'luxon'
+import env from '#start/env'
 
 @inject()
 export default class AuthsService {
@@ -90,5 +93,37 @@ export default class AuthsService {
     authProvider.password = password
 
     await authProvider.save()
+  }
+
+  async googleLogin(googleUser: GoogleUser) {
+    const providerAuth = await Auth.query()
+      .where('providerId', googleUser.id)
+      .andWhere('providerName', providers.google)
+      .first()
+
+    if (providerAuth) {
+      const user = await User.findOrFail(providerAuth.userId)
+      user.lastConnexion = DateTime.now()
+      await user.save()
+    } else {
+      // used to create admin (from env file)
+      const defaultAdmins = env.get('DEFAULT_USER_ADMIN') ?? ''
+      const roleId = defaultAdmins.includes(googleUser.email) ? roles.admin.id : roles.user.id
+      const user = await User.create({
+        id: cuid(),
+        username: googleUser.name,
+        email: googleUser.email,
+        roleId,
+        emailVerified: true,
+        lastConnexion: DateTime.now(),
+        avatar: 'avatar_1',
+      })
+      await user.related('auths').create({
+        id: cuid(),
+        providerId: googleUser.id,
+        providerName: providers.google,
+      })
+    }
+    return User.query().where('email', googleUser.email).firstOrFail()
   }
 }

@@ -28,6 +28,9 @@ router
       .use(middleware.captcha())
     router.get('email/resetPassword', [AuthsController, 'showResetPassword'])
     router.post('email/resetPassword', [AuthsController, 'resetPassword'])
+
+    router.get('/google/redirect', [AuthsController, 'googleRedirect'])
+    router.get('/google/callback', [AuthsController, 'googleCallback'])
   })
   .prefix('auth/')
   .use(middleware.guest())

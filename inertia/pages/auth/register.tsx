@@ -59,7 +59,7 @@ const Register = () => {
   }
 
   const loginGoogle = () => {
-    window.location.href = `${window.location.origin}/google/redirect`
+    window.location.href = `${window.location.origin}/auth/google/redirect`
   }
   return (
     <MenuLayout className="!pt-0 h-screen">
