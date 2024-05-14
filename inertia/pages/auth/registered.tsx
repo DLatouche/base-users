@@ -18,7 +18,9 @@ const Registered = () => {
             <p>Vous êtes inscrit(e), un email de confirmation vous a été envoyé.</p>
             <p>Vérfiez votre email pour vous connecter.</p>
             <hr className="my-4" />
-            <Link href="/">Retour à l'accueil</Link>
+            <Link className="hover:underline underline-offset-4" href="/">
+              Retour à l'accueil
+            </Link>
           </CardContent>
         </Card>
       </div>

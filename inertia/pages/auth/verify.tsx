@@ -14,9 +14,13 @@ const Verify = () => {
           <CardContent>
             <p>Votre email a été vérifié.</p>
             <p>Vous pouvez vous connecter.</p>
-            <Link href="/login">Se connecter</Link>
+            <Link className="hover:underline underline-offset-4" href="/login">
+              Se connecter
+            </Link>
             <hr className="my-4" />
-            <Link href="/">Retour à l'accueil</Link>
+            <Link className="hover:underline underline-offset-4" href="/">
+              Retour à l'accueil
+            </Link>
           </CardContent>
         </Card>
       </div>

@@ -18,7 +18,9 @@ const VerifyError = () => {
             <p>Votre email n'a pas été vérifié.</p>
             <p>Le token fourni n'est pas valide.</p>
             <hr className="my-4" />
-            <Link href="/">Retour à l'accueil</Link>
+            <Link className="hover:underline underline-offset-4" href="/">
+              Retour à l'accueil
+            </Link>
           </CardContent>
         </Card>
       </div>

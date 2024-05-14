@@ -145,7 +145,9 @@ const Register = () => {
               </Button>
             </div>
             <hr className="my-4" />
-            <Link href="/">Retour à l'accueil</Link>
+            <Link className="hover:underline underline-offset-4" href="/">
+              Retour à l'accueil
+            </Link>
           </CardContent>
         </Card>
       </div>
