@@ -16,7 +16,7 @@ export default class extends BaseSchema {
       table.boolean('email_verified').defaultTo(false)
       table.string('username').notNullable()
       table.string('email', 254).notNullable().unique()
-      table.string('avatar').notNullable()
+      table.string('avatar').notNullable().defaultTo('avatar_1')
 
       table.timestamp('last_connexion', { useTz: true })
       table.timestamp('updated_at').nullable()
