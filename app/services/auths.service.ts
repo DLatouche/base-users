@@ -1,7 +1,7 @@
 import AlreadyExistException from '#exceptions/already_exist_exception'
 import Auth from '#models/auth'
 import User from '#models/user'
-import { EmailRegister } from '#validators/auths.validator'
+import { EmailRegister, RequestResetPassword, ResetPassword } from '#validators/auths.validator'
 import { cuid } from '@adonisjs/core/helpers'
 import db from '@adonisjs/lucid/services/db'
 import { roles } from '../../enums/roles.js'
@@ -64,5 +64,31 @@ export default class AuthsService {
   async verifyEmail(token: string) {
     const user = this.tokensService.verifyEmail(token)
     return user
+  }
+
+  async requestResetPassword(data: RequestResetPassword) {
+    const auth = await Auth.query()
+      .where('provider_name', providers.email)
+      .andWhere('provider_id', data.email)
+      .firstOrFail()
+    const user = await User.query().where('id', auth.userId).firstOrFail()
+    const token = await this.tokensService.createResetPasswordToken(auth.userId)
+    await this.emailsService.sendResetPasswordEmail(token, user)
+  }
+
+  async resetPassword({ token, password }: ResetPassword) {
+    const tokenModel = await this.tokensService.verifyResetPassword(token)
+
+    const user = await User.query().where('id', tokenModel.userId).firstOrFail()
+
+    const authProvider = await Auth.query()
+      .where('userId', tokenModel.userId)
+      .andWhere('providerName', 'email')
+      .andWhere('providerId', user.email)
+      .firstOrFail()
+
+    authProvider.password = password
+
+    await authProvider.save()
   }
 }

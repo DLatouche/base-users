@@ -40,4 +40,32 @@ export default class TokensService {
 
     return user
   }
+
+  async createResetPasswordToken(userId: string) {
+    const token = await Token.create({
+      id: cuid(),
+      userId,
+      type: tokens.resetPassword,
+      expiresAt: DateTime.now().plus({ hours: 1 }),
+      hash: stringHelpers.random(64),
+    })
+
+    return token
+  }
+
+  async verifyResetPassword(token: string) {
+    const tokenModel = await Token.query()
+      .where('hash', token)
+      .andWhere('type', tokens.resetPassword)
+      .andWhere('expiresAt', '>', DateTime.now().toISO())
+      .first()
+
+    if (!tokenModel) {
+      throw new NotFoundException('Token not found')
+    }
+
+    await tokenModel.delete()
+
+    return tokenModel
+  }
 }

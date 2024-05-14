@@ -21,6 +21,11 @@ router
 
     router.get('email/verify', [AuthsController, 'verifyEmail'])
     router.get('email/verifyError', [AuthsController, 'showVerifyError'])
+
+    router.get('email/requestResetPassword', [AuthsController, 'showRequestResetPassword'])
+    router.post('email/requestResetPassword', [AuthsController, 'requestResetPassword'])
+    router.get('email/resetPassword', [AuthsController, 'showResetPassword'])
+    router.post('email/resetPassword', [AuthsController, 'resetPassword'])
   })
   .prefix('auth/')
   .use(middleware.guest())
