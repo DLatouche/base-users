@@ -6,12 +6,7 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.string('id').unique().primary()
-      table
-        .string('role_id')
-        .references('id')
-        .inTable('roles')
-        .onDelete('SET NULL')
-        .onUpdate('CASCADE')
+      table.string('role_id').references('id').inTable('roles').onUpdate('CASCADE')
 
       table.boolean('email_verified').defaultTo(false)
       table.string('username').notNullable()

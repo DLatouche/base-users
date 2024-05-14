@@ -16,6 +16,8 @@ router.on('/').renderInertia('home')
 router
   .group(() => {
     router.get('register', [AuthsController, 'showRegister'])
+    router.get('registered', [AuthsController, 'showRegistered'])
+    router.post('email/register', [AuthsController, 'emailRegister'])
   })
   .prefix('auth/')
   .use(middleware.guest())

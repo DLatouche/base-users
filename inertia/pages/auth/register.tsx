@@ -48,7 +48,7 @@ const Register = () => {
 
   const callbackCaptcha = async (token: string) => {
     const values = form.getValues()
-    router.post('/auth/email/signin', {
+    router.post('/auth/email/register', {
       email: values.email,
       password: values.password,
       username: values.username,
