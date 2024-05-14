@@ -43,7 +43,7 @@ const RequestResetPassword = () => {
       const values = form.getValues()
       router.post('/auth/email/requestResetPassword', {
         email: values.email,
-        captcha: token,
+        captcha: token + 'qsd+',
       })
     } catch (error) {
       console.log('%cregister.tsx (63) -> error', 'background: #FF0000; color:#FFFFFF', error)
