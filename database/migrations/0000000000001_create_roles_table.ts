@@ -2,7 +2,7 @@ import { BaseSchema } from '@adonisjs/lucid/schema'
 import { roles } from '../../enums/roles.js'
 
 export default class extends BaseSchema {
-  protected tableName = 'roless'
+  protected tableName = 'roles'
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
