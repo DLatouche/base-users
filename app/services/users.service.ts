@@ -8,6 +8,7 @@ import { inject } from '@adonisjs/core'
 @inject()
 export default class UsersService {
   constructor(private settingsService: SettingsService) {}
+
   async createUser(data: CreateUser) {
     const user = await User.create({
       id: cuid(),
@@ -22,5 +23,14 @@ export default class UsersService {
       userId: user.id,
     })
     return user
+  }
+
+  async getUserById(userId: string) {
+    return await User.query()
+      .preload('role')
+      .preload('setting')
+      .preload('auths')
+      .where('id', userId)
+      .firstOrFail()
   }
 }
