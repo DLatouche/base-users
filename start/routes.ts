@@ -11,6 +11,7 @@ import AuthsController from '#controllers/auths.controller'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import DashboardController from '#controllers/dashboard.controller'
+import UsersController from '#controllers/users.controller'
 
 router.on('/').renderInertia('home')
 
@@ -47,6 +48,11 @@ router
 router
   .group(() => {
     router.get('dashboard', [DashboardController, 'showDashboard'])
+    router
+      .group(() => {
+        router.get('/', [UsersController, 'showUsers'])
+      })
+      .prefix('users')
   })
   .prefix('admin/')
   .use(middleware.admin())
