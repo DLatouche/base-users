@@ -7,6 +7,7 @@ import { inject } from '@adonisjs/core'
 import { UpdatedAccount } from '#validators/accounts.validator'
 import Auth from '#models/auth'
 import { providers } from '../../enums/providers.js'
+import db from '@adonisjs/lucid/services/db'
 
 @inject()
 export default class UsersService {
@@ -35,6 +36,11 @@ export default class UsersService {
       .preload('auths')
       .where('id', userId)
       .firstOrFail()
+  }
+
+  async getUsersCount() {
+    const count = await db.from('users').count('* as total')
+    return count[0].total
   }
 
   async updateAccount({ password, email, ...userData }: UpdatedAccount) {
