@@ -1,10 +1,10 @@
-import { MenuLayout } from '@/components/layouts/menu_layout.tsx/menu_layout'
+import { AdminLayout } from '@/components/layouts/admin_layout/admin_layout'
 
 const Dashboard = () => {
   return (
-    <MenuLayout>
+    <AdminLayout>
       <div className="container">Dashboard</div>
-    </MenuLayout>
+    </AdminLayout>
   )
 }
 
