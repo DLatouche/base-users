@@ -2,6 +2,7 @@ import { inject } from '@adonisjs/core'
 import AuthsService from '#services/auths.service'
 import { HttpContext } from '@adonisjs/core/http'
 import {
+  emailLoginValidator,
   emailRegisterValidator,
   emailVerifyValidator,
   requestResetPasswordValidator,
@@ -26,6 +27,10 @@ export default class AuthsController {
 
   public async showRequestResetPassword({ inertia }: HttpContext) {
     return inertia.render('auth/password/request_reset_password')
+  }
+
+  public async showLogin({ inertia }: HttpContext) {
+    return inertia.render('auth/login')
   }
 
   public async requestResetPassword({ inertia, response, session, request }: HttpContext) {
@@ -65,6 +70,21 @@ export default class AuthsController {
       return response.redirect().toRoute('/auth/registered')
     } catch (error) {
       console.log('auths.controller.ts (21) -> error', error.code, '->', error.message)
+      session.flash(`errors.${error.code}`, error)
+      return response.redirect().back()
+    }
+  }
+
+  public async emailLogin({ request, response, session, auth }: HttpContext) {
+    try {
+      const data = await emailLoginValidator.validate(request.all())
+      // await this.authsService.emailRegister(data)
+      const user = await this.authsService.emailLogin(data)
+      session.flash(`success.login`, 'Connexion réussie')
+      await auth.use('web').login(user)
+      return response.redirect().toRoute('/')
+    } catch (error) {
+      console.log('auths.controller.ts (87) -> error', error.code, '->', error.message)
       session.flash(`errors.${error.code}`, error)
       return response.redirect().back()
     }

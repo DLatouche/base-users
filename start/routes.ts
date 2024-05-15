@@ -29,8 +29,11 @@ router
     router.get('email/resetPassword', [AuthsController, 'showResetPassword'])
     router.post('email/resetPassword', [AuthsController, 'resetPassword'])
 
-    router.get('/google/redirect', [AuthsController, 'googleRedirect'])
-    router.get('/google/callback', [AuthsController, 'googleCallback'])
+    router.get('google/redirect', [AuthsController, 'googleRedirect'])
+    router.get('google/callback', [AuthsController, 'googleCallback'])
+
+    router.get('login', [AuthsController, 'showLogin'])
+    router.post('email/login', [AuthsController, 'emailLogin'])
   })
   .prefix('auth/')
   .use(middleware.guest())

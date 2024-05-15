@@ -1,7 +1,12 @@
 import AlreadyExistException from '#exceptions/already_exist_exception'
 import Auth from '#models/auth'
 import User from '#models/user'
-import { EmailRegister, RequestResetPassword, ResetPassword } from '#validators/auths.validator'
+import {
+  EmailLogin,
+  EmailRegister,
+  RequestResetPassword,
+  ResetPassword,
+} from '#validators/auths.validator'
 import { cuid } from '@adonisjs/core/helpers'
 import db from '@adonisjs/lucid/services/db'
 import { roles } from '../../enums/roles.js'
@@ -12,6 +17,8 @@ import EmailsService from './emails.service.js'
 import { GoogleUser } from '../../type/google.js'
 import { DateTime } from 'luxon'
 import env from '#start/env'
+import NotFoundException from '#exceptions/not_found_exception'
+import hash from '@adonisjs/core/services/hash'
 
 @inject()
 export default class AuthsService {
@@ -125,5 +132,28 @@ export default class AuthsService {
       })
     }
     return User.query().where('email', googleUser.email).firstOrFail()
+  }
+
+  async emailLogin({ email, password }: EmailLogin) {
+    const authProvider = await Auth.query()
+      .where('providerId', email)
+      .andWhere('providerName', 'email')
+      .first()
+
+    if (!authProvider) {
+      throw new NotFoundException('Auth not found')
+    }
+
+    if (!(await hash.verify(authProvider.password, password))) {
+      await authProvider.save()
+      throw new NotFoundException('User not found')
+    }
+    const user = await User.findOrFail(authProvider.userId)
+
+    if (!user.emailVerified) {
+      throw new NotFoundException('Email not verified')
+    }
+
+    return user
   }
 }

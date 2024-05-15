@@ -10,6 +10,14 @@ export const emailRegisterValidator = vine.compile(
 )
 export type EmailRegister = Infer<typeof emailRegisterValidator>
 
+export const emailLoginValidator = vine.compile(
+  vine.object({
+    email: vine.string().email().trim().escape(),
+    password: vine.string().minLength(8).escape(),
+  })
+)
+export type EmailLogin = Infer<typeof emailLoginValidator>
+
 export const emailVerifyValidator = vine.compile(
   vine.object({
     token: vine.string().trim().escape(),
