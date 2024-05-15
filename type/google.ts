@@ -4,8 +4,8 @@ export type GoogleUser = {
   token: GoogleToken
   id: any
   nickName: any
-  name: any
-  email: any
+  name: string
+  email: string
   avatarUrl: any
   emailVerificationState: 'verified' | 'unverified'
   original: any

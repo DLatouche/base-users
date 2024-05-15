@@ -21,13 +21,15 @@ import NotFoundException from '#exceptions/not_found_exception'
 import hash from '@adonisjs/core/services/hash'
 import CaptchaService from './captcha.service.js'
 import CaptchaException from '#exceptions/captcha_exception'
+import UsersService from './users.service.js'
 
 @inject()
 export default class AuthsService {
   constructor(
     private tokensService: TokensService,
     private emailsService: EmailsService,
-    private captchaService: CaptchaService
+    private captchaService: CaptchaService,
+    private usersService: UsersService
   ) {}
 
   async emailRegister(data: EmailRegister & { roleId?: string }) {
@@ -39,39 +41,21 @@ export default class AuthsService {
     }
 
     // Create user with auth and token for confirm email
-    const trx = await db.transaction()
-    try {
-      const user = await User.create(
-        {
-          id: cuid(),
-          email: data.email,
-          username: data.username,
-          roleId: data.roleId ?? roles.user.id,
-          emailVerified: false,
-          avatar: 'avatar_1',
-        },
-        { client: trx }
-      )
+    const user = await this.usersService.createUser({
+      email: data.email,
+      username: data.username,
+      roleId: data.roleId ?? roles.user.id,
+    })
+    await user.related('auths').create({
+      id: cuid(),
+      providerId: user.email,
+      providerName: providers.email,
+      password: data.password,
+    })
 
-      await Auth.create(
-        {
-          id: cuid(),
-          providerId: user.email,
-          providerName: providers.email,
-          userId: user.id,
-          password: data.password,
-        },
-        { client: trx }
-      )
-
-      await trx.commit()
-      const token = await this.tokensService.createVerifyToken(user)
-      await this.emailsService.sendVerifyEmail(token, user)
-      return user
-    } catch (error) {
-      await trx.rollback()
-      throw error
-    }
+    const token = await this.tokensService.createVerifyToken(user)
+    await this.emailsService.sendVerifyEmail(token, user)
+    return user
   }
 
   async verifyEmail(token: string) {
@@ -119,15 +103,13 @@ export default class AuthsService {
       // used to create admin (from env file)
       const defaultAdmins = env.get('DEFAULT_USER_ADMIN') ?? ''
       const roleId = defaultAdmins.includes(googleUser.email) ? roles.admin.id : roles.user.id
-      const user = await User.create({
-        id: cuid(),
+      const user = await this.usersService.createUser({
         username: googleUser.name,
         email: googleUser.email,
         roleId,
         emailVerified: true,
-        lastConnexion: DateTime.now(),
-        avatar: 'avatar_1',
       })
+
       await user.related('auths').create({
         id: cuid(),
         providerId: googleUser.id,
