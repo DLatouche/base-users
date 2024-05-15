@@ -32,9 +32,11 @@ export const UserMenu = () => {
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={logout}>Se déconnecter</DropdownMenuItem>
-        </DropdownMenuGroup>
+        <Link href="/account">
+          <DropdownMenuItem onClick={logout}>Mon compte</DropdownMenuItem>
+        </Link>
+
+        <DropdownMenuItem onClick={logout}>Se déconnecter</DropdownMenuItem>
         {user?.isAdmin && (
           <>
             <DropdownMenuSeparator />
