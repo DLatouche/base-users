@@ -39,7 +39,7 @@ export const UserMenu = () => {
           <>
             <DropdownMenuSeparator />
             <Link href="/admin/dashboard">
-              <DropdownMenuItem>Adminisration</DropdownMenuItem>
+              <DropdownMenuItem>Administration</DropdownMenuItem>
             </Link>
             <Link href="/">
               <DropdownMenuItem>Accueil</DropdownMenuItem>
