@@ -10,7 +10,8 @@ export default class Auth extends BaseModel {
   @column() declare userId: string
   @column() declare providerId: string
   @column() declare providerName: string
-  @column() declare password: string
+
+  @column({ serializeAs: null }) declare password: string
 
   @column() declare nbTry: number
 
