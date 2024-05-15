@@ -61,6 +61,7 @@ router
 router
   .group(() => {
     router.get('/', [AccountController, 'showAccount'])
+    router.patch('/', [AccountController, 'updateAccount'])
   })
   .prefix('account/')
   .use(middleware.auth())

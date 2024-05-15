@@ -40,5 +40,5 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare auths: HasMany<typeof Auth>
 
   @hasOne(() => Setting)
-  declare settings: HasOne<typeof Setting>
+  declare setting: HasOne<typeof Setting>
 }

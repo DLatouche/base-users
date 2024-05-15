@@ -13,4 +13,16 @@ export default class SettingsService {
 
     return settings
   }
+
+  async updateSettings(data: CreateSettings) {
+    const settings = await Setting.findByOrFail('userId', data.userId)
+
+    settings.merge({
+      menuExpanded: data.menuExpanded,
+      theme: data.theme,
+    })
+    await settings.save()
+
+    return settings
+  }
 }
