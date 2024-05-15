@@ -14,6 +14,7 @@ export const emailLoginValidator = vine.compile(
   vine.object({
     email: vine.string().email().trim().escape(),
     password: vine.string().minLength(8).escape(),
+    captcha: vine.string().optional(),
   })
 )
 export type EmailLogin = Infer<typeof emailLoginValidator>

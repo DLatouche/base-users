@@ -26,6 +26,11 @@ const formSchema = z.object({
 const Login = () => {
   const { SITE_KEY } = usePage().props
   useErrors(usePage().props, 'Une erreur est survenue lors de la connexion')
+
+  // Check if the captcha is needed
+  // If the user has tried to login more than 1 time we will have an error
+  const needCaptcha = !!usePage().props.errors
+
   const refCaptcha = useRef<HCaptcha>(null)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,16 +40,26 @@ const Login = () => {
     },
   })
 
-  const onSubmit = () => {
-    refCaptcha?.current?.execute()
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    if (needCaptcha) {
+      refCaptcha?.current?.execute()
+    } else {
+      submitForm(data)
+    }
   }
 
   const callbackCaptcha = async (token: string) => {
     const values = form.getValues()
-    router.post('/auth/email/login', {
-      email: values.email,
-      password: values.password,
-    })
+    await submitForm(values, token)
+  }
+
+  const submitForm = async (data: z.infer<typeof formSchema>, token?: string) => {
+    const payload = {
+      email: data.email,
+      password: data.password,
+      captcha: token,
+    }
+    router.post('/auth/email/login', payload)
   }
 
   const loginGoogle = () => {
@@ -93,6 +108,7 @@ const Login = () => {
                 >
                   Mot de passe oublié?
                 </Link>
+
                 <HCaptcha
                   sitekey={SITE_KEY as string}
                   onVerify={callbackCaptcha}

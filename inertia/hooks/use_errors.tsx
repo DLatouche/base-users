@@ -14,6 +14,11 @@ export const useErrors = (props: any, defaultMessage?: string) => {
           variant: 'destructive',
           description: 'Cet email est déjà utilisé',
         })
+      if (errors['E_CAPTCHA_EXCEPTION'])
+        toast({
+          variant: 'destructive',
+          description: 'Captcha invalide',
+        })
       else
         toast({
           variant: 'destructive',

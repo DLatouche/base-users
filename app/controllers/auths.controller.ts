@@ -78,7 +78,6 @@ export default class AuthsController {
   async emailLogin({ request, response, session, auth }: HttpContext) {
     try {
       const data = await emailLoginValidator.validate(request.all())
-      // await this.authsService.emailRegister(data)
       const user = await this.authsService.emailLogin(data)
       session.flash(`success.login`, 'Connexion réussie')
       await auth.use('web').login(user)

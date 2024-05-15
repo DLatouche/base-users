@@ -19,12 +19,15 @@ import { DateTime } from 'luxon'
 import env from '#start/env'
 import NotFoundException from '#exceptions/not_found_exception'
 import hash from '@adonisjs/core/services/hash'
+import CaptchaService from './captcha.service.js'
+import CaptchaException from '#exceptions/captcha_exception'
 
 @inject()
 export default class AuthsService {
   constructor(
     private tokensService: TokensService,
-    private emailsService: EmailsService
+    private emailsService: EmailsService,
+    private captchaService: CaptchaService
   ) {}
 
   async emailRegister(data: EmailRegister & { roleId?: string }) {
@@ -134,7 +137,7 @@ export default class AuthsService {
     return User.query().where('email', googleUser.email).firstOrFail()
   }
 
-  async emailLogin({ email, password }: EmailLogin) {
+  async emailLogin({ email, password, captcha }: EmailLogin) {
     const authProvider = await Auth.query()
       .where('providerId', email)
       .andWhere('providerName', 'email')
@@ -144,7 +147,20 @@ export default class AuthsService {
       throw new NotFoundException('Auth not found')
     }
 
+    // check if user has tried to login more than 1 time
+    if (authProvider.nbTry >= 1) {
+      // if yes, check if captcha is valid
+      if (!captcha) {
+        throw new CaptchaException('Captcha not found')
+      }
+      if (!(await this.captchaService.verifyCaptcha(captcha))) {
+        throw new CaptchaException('Captcha is not valid')
+      }
+    }
+
     if (!(await hash.verify(authProvider.password, password))) {
+      // if password is not valid, increment nbTry
+      authProvider.nbTry++
       await authProvider.save()
       throw new NotFoundException('User not found')
     }
@@ -152,6 +168,12 @@ export default class AuthsService {
 
     if (!user.emailVerified) {
       throw new NotFoundException('Email not verified')
+    }
+
+    // if user can login, reset nbTry
+    if (authProvider.nbTry > 0) {
+      authProvider.nbTry = 0
+      await authProvider.save()
     }
 
     return user
