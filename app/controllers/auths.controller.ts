@@ -13,27 +13,27 @@ import {
 export default class AuthsController {
   constructor(private authsService: AuthsService) {}
 
-  public async showRegister({ inertia }: HttpContext) {
+  async showRegister({ inertia }: HttpContext) {
     return inertia.render('auth/register')
   }
 
-  public async showRegistered({ inertia }: HttpContext) {
+  async showRegistered({ inertia }: HttpContext) {
     return inertia.render('auth/registered')
   }
 
-  public async showVerifyError({ inertia }: HttpContext) {
+  async showVerifyError({ inertia }: HttpContext) {
     return inertia.render('auth/verify_error')
   }
 
-  public async showRequestResetPassword({ inertia }: HttpContext) {
+  async showRequestResetPassword({ inertia }: HttpContext) {
     return inertia.render('auth/password/request_reset_password')
   }
 
-  public async showLogin({ inertia }: HttpContext) {
+  async showLogin({ inertia }: HttpContext) {
     return inertia.render('auth/login')
   }
 
-  public async requestResetPassword({ inertia, response, session, request }: HttpContext) {
+  async requestResetPassword({ inertia, response, session, request }: HttpContext) {
     try {
       const data = await requestResetPasswordValidator.validate(request.all())
       await this.authsService.requestResetPassword(data)
@@ -46,11 +46,11 @@ export default class AuthsController {
     }
   }
 
-  public async showResetPassword({ inertia }: HttpContext) {
+  async showResetPassword({ inertia }: HttpContext) {
     return inertia.render('auth/password/reset_password')
   }
 
-  public async resetPassword({ inertia, response, session, request }: HttpContext) {
+  async resetPassword({ inertia, response, session, request }: HttpContext) {
     try {
       const data = await resetPasswordValidator.validate(request.all())
       await this.authsService.resetPassword(data)
@@ -62,7 +62,7 @@ export default class AuthsController {
     }
   }
 
-  public async emailRegister({ request, response, session }: HttpContext) {
+  async emailRegister({ request, response, session }: HttpContext) {
     try {
       const data = await emailRegisterValidator.validate(request.all())
       await this.authsService.emailRegister(data)
@@ -75,7 +75,7 @@ export default class AuthsController {
     }
   }
 
-  public async emailLogin({ request, response, session, auth }: HttpContext) {
+  async emailLogin({ request, response, session, auth }: HttpContext) {
     try {
       const data = await emailLoginValidator.validate(request.all())
       // await this.authsService.emailRegister(data)
@@ -90,7 +90,7 @@ export default class AuthsController {
     }
   }
 
-  public async verifyEmail({ request, response, session, inertia }: HttpContext) {
+  async verifyEmail({ request, response, session, inertia }: HttpContext) {
     try {
       const data = await emailVerifyValidator.validate(request.all())
       await this.authsService.verifyEmail(data.token)
