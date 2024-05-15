@@ -6,9 +6,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu'
 import { Link, router, usePage } from '@inertiajs/react'
+import { useEffect } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 export const UserMenu = () => {
@@ -19,6 +19,10 @@ export const UserMenu = () => {
   const logout = async () => {
     router.post('/auth/logout')
   }
+
+  useEffect(() => {
+    if (user.setting.theme) document.documentElement.className = user.setting.theme
+  }, [user.setting.theme])
 
   return (
     <DropdownMenu>
