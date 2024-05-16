@@ -1,7 +1,7 @@
 import { usersAdminBouncer } from '#abilities/users.bouncer'
 import UnauthorizedException from '#exceptions/unauthorised_exception'
 import UsersService from '#services/users.service'
-import { getAllUsersValidator } from '#validators/users.validator'
+import { createUserAdminValidator, getAllUsersValidator } from '#validators/users.validator'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -29,6 +29,21 @@ export default class UsersController {
     } catch (error) {
       session.flash(`errors.${error.code}`, error)
       console.log('users.controller.ts (34) ->error', error)
+      return response.redirect().back()
+    }
+  }
+
+  async createUser({ session, response, bouncer, request }: HttpContext) {
+    try {
+      if (!(await bouncer.allows(usersAdminBouncer))) throw new UnauthorizedException()
+      const data = await createUserAdminValidator.validate(request.all())
+      await this.usersService.createUserWithAuth(data)
+      session.flash(`success.createUser`, 'Utilisateur créé')
+
+      return response.redirect('/admin/users/')
+    } catch (error) {
+      session.flash(`errors.${error.code}`, error)
+      console.log('users.controller.ts (42) ->error', error)
       return response.redirect().back()
     }
   }

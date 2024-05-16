@@ -1,5 +1,5 @@
 import User from '#models/user'
-import { CreateUser, GetAllUsers } from '#validators/users.validator'
+import { CreateUser, CreateUserAdmin, GetAllUsers } from '#validators/users.validator'
 import { cuid } from '@adonisjs/core/helpers'
 import { roles } from '../../enums/roles.js'
 import SettingsService from './settings.service.js'
@@ -8,10 +8,18 @@ import { UpdatedAccount } from '#validators/accounts.validator'
 import Auth from '#models/auth'
 import { providers } from '../../enums/providers.js'
 import db from '@adonisjs/lucid/services/db'
+import { themes } from '../../enums/themes.js'
+import TokensService from './tokens.service.js'
+import EmailsService from './emails.service.js'
+import AlreadyExistException from '#exceptions/already_exist_exception'
 
 @inject()
 export default class UsersService {
-  constructor(private settingsService: SettingsService) {}
+  constructor(
+    private settingsService: SettingsService,
+    private tokensService: TokensService,
+    private emailsService: EmailsService
+  ) {}
 
   async createUser(data: CreateUser) {
     const user = await User.create({
@@ -25,7 +33,27 @@ export default class UsersService {
 
     await this.settingsService.createSettings({
       userId: user.id,
+      theme: data.theme ?? themes.blue,
     })
+    return user
+  }
+
+  async createUserWithAuth(data: CreateUserAdmin) {
+    const alreadyHasUser = await User.query().where('email', data.email).first()
+    const alreadyHasAuth = await Auth.query().where('providerId', data.email).first()
+    if (alreadyHasUser || alreadyHasAuth) {
+      throw new AlreadyExistException('User already exist')
+    }
+    const user = await this.createUser(data)
+    await Auth.create({
+      id: cuid(),
+      userId: user.id,
+      providerName: providers.email,
+      providerId: data.email,
+      password: data.password,
+    })
+    const token = await this.tokensService.createVerifyToken(user)
+    await this.emailsService.sendVerifyEmail(token, user)
     return user
   }
 
