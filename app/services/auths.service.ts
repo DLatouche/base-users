@@ -158,6 +158,10 @@ export default class AuthsService {
       await authProvider.save()
     }
 
+    // Update last connexion
+    user.lastConnexion = DateTime.now()
+    await user.save()
+
     return user
   }
 }
