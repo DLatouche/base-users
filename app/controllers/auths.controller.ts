@@ -29,8 +29,11 @@ export default class AuthsController {
     return inertia.render('auth/password/request_reset_password')
   }
 
-  async showLogin({ inertia }: HttpContext) {
-    return inertia.render('auth/login')
+  async showLogin({ inertia, request }: HttpContext) {
+    // isAdmin is used to show the admin login page
+    // it's used to redirect to the correct page after login and change info on the page
+    const isAdmin = request.url().includes('login/admin')
+    return inertia.render('auth/login', { isAdmin })
   }
 
   async requestResetPassword({ inertia, response, session, request }: HttpContext) {
@@ -81,7 +84,9 @@ export default class AuthsController {
       const user = await this.authsService.emailLogin(data)
       session.flash(`success.login`, 'Connexion réussie')
       await auth.use('web').login(user)
-      return response.redirect().toRoute('/')
+      const source = request.qs().source
+      const pathToRedirect = source === 'admin' ? '/admin/dashboard' : '/'
+      return response.redirect().toRoute(pathToRedirect)
     } catch (error) {
       console.log('auths.controller.ts (87) -> error', error.code, '->', error.message)
       session.flash(`errors.${error.code}`, error)

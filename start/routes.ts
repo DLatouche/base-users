@@ -39,6 +39,7 @@ router
 
         router.post('email/login', [AuthsController, 'emailLogin'])
         router.get('login', [AuthsController, 'showLogin'])
+        router.get('login/admin', [AuthsController, 'showLogin'])
       })
       .use(middleware.guest())
 

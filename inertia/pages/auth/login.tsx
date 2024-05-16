@@ -24,7 +24,9 @@ const formSchema = z.object({
 })
 
 const Login = () => {
-  const { SITE_KEY } = usePage().props
+  // isAdmin used to redirect to the correct page after login and change info on the page
+  const { SITE_KEY, isAdmin } = usePage<{ SITE_KEY: string; isAdmin: boolean }>().props
+
   useErrors(usePage().props, 'Une erreur est survenue lors de la connexion')
 
   // Check if the captcha is needed
@@ -59,18 +61,18 @@ const Login = () => {
       password: data.password,
       captcha: token,
     }
-    router.post('/auth/email/login', payload)
+    router.post(`/auth/email/login${isAdmin && '?source=admin'}`, payload)
   }
 
   const loginGoogle = () => {
-    window.location.href = `${window.location.origin}/auth/google/redirect`
+    window.location.href = `${window.location.origin}/auth/google/redirect${isAdmin && '?source=admin'}`
   }
   return (
     <MenuLayout className="!pt-0 h-screen">
       <div className="flex flex-col justify-center items-center h-full">
         <Card className="max-w-96 w-full">
           <CardHeader>
-            <CardTitle>Connexion</CardTitle>
+            <CardTitle>{isAdmin ? 'Administration connexion' : 'Connexion'}</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
