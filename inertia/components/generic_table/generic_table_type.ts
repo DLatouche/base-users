@@ -58,3 +58,15 @@ export type GenericTableBodyProps<T> = {
   onClickRow?: (item: T) => void
   rowKey: keyof T
 }
+
+export type Meta = {
+  firstPage: number
+  perPage: number
+  currentPage: number
+  lastPage: number
+  hasPages: boolean
+  hasMorePages: boolean
+  isEmpty: boolean
+  total: number
+  hasTotal: boolean
+}

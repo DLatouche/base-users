@@ -1,26 +1,16 @@
-import User from '#models/user'
-import { GenericTable } from '@/components/generic_table/generic_table'
-import { Column, Order } from '@/components/generic_table/generic_table_type'
+import type User from '#models/user'
+import { Meta, Order } from '@/components/generic_table/generic_table_type'
 import { InputSearch } from '@/components/input_search/input_search'
 import { AdminLayout } from '@/components/layouts/admin_layout/admin_layout'
+import UsersTable from '@/components/users/users_table'
 import { debounce } from '@/utils/debounce'
 import { router, usePage } from '@inertiajs/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 type UsersProps = {
   usersPaginated: {
     data: User[]
-    meta: {
-      firstPage: number
-      perPage: number
-      currentPage: number
-      lastPage: number
-      hasPages: boolean
-      hasMorePages: boolean
-      isEmpty: boolean
-      total: number
-      hasTotal: boolean
-    }
+    meta: Meta
   }
 }
 
@@ -122,32 +112,6 @@ const Users = () => {
     })
   }
 
-  const columns = useMemo<Column<User>[]>(() => {
-    return [
-      { id: 'id', label: 'ID', maxWidth: '90px', sortable: true },
-      { id: 'email', label: 'Email', sortable: true },
-      { id: 'username', label: 'Pseudo', sortable: true },
-      {
-        id: 'emailVerified',
-        label: 'Vérfié',
-        sortable: true,
-        align: 'right',
-        maxWidth: '90px',
-        format: (value: boolean) => (
-          <span className="flex justify-end">{value ? 'Yes' : 'No'}</span>
-        ),
-      },
-      {
-        sortable: true,
-        id: 'lastConnexion',
-        label: 'Dernière connexion',
-        format: (value: string) => {
-          return value ? new Date(value).toLocaleDateString() : '-'
-        },
-      },
-    ]
-  }, [])
-
   return (
     <AdminLayout>
       <div className="container">
@@ -159,20 +123,13 @@ const Users = () => {
             onSearch={handleSearch}
           />
         </div>
-        <GenericTable<User>
-          className="border rounded-md mt-4"
-          data={usersPaginated.data}
+        <UsersTable
+          usersPaginated={usersPaginated}
+          orderBy={orderBy}
+          order={order}
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
           onSort={handleSort}
-          orderBy={orderBy}
-          order={order}
-          rowKey="id"
-          onClickRow={(row) => console.log(row)}
-          total={usersPaginated.meta.total}
-          page={usersPaginated.meta.currentPage}
-          rowsPerPage={usersPaginated.meta.perPage ?? 0}
-          columns={columns}
         />
       </div>
     </AdminLayout>
