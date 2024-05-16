@@ -5,3 +5,7 @@ export const editUserBouncer = Bouncer.ability((currentUser: User, userEdited: U
   // only the user can edit their own profile or an admin can edit any profile
   return currentUser.isAdmin || currentUser.id === userEdited.id
 })
+
+export const usersAdminBouncer = Bouncer.ability((currentUser: User) => {
+  return currentUser.isAdmin
+})

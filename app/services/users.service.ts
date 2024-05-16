@@ -1,5 +1,5 @@
 import User from '#models/user'
-import { CreateUser } from '#validators/users.validator'
+import { CreateUser, GetAllUsers } from '#validators/users.validator'
 import { cuid } from '@adonisjs/core/helpers'
 import { roles } from '../../enums/roles.js'
 import SettingsService from './settings.service.js'
@@ -96,5 +96,25 @@ export default class UsersService {
     if (data.password) authProvider.password = data.password
 
     await authProvider.save()
+  }
+
+  async getAllUsers({
+    page = 1,
+    perPage = 10,
+    orderBy = 'id',
+    order = 'asc',
+    searchQuery,
+  }: GetAllUsers) {
+    const users = await User.query()
+      .preload('role')
+      .if(searchQuery, (qry) => {
+        return qry
+          .whereILike('username', `%${searchQuery}%`)
+          .orWhereILike('email', `%${searchQuery}%`)
+      })
+      .orderBy(orderBy, order as 'asc' | 'desc')
+      .paginate(page, perPage)
+
+    return users
   }
 }
