@@ -21,7 +21,6 @@ import {
 import { useErrors } from '@/hooks/use_errors'
 import { useSuccess } from '@/hooks/use_success'
 import { avatars } from '@/utils/avatars'
-import { upperFirst } from '@/utils/strings'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { router, usePage } from '@inertiajs/react'
@@ -45,7 +44,7 @@ const formSchema = z
       return !data.password || data.password === '' || data.password === data.rePassword
     },
     {
-      message: 'Passwords do not match',
+      message: 'Les mots de passe ne correspondent pas',
       path: ['rePassword'],
     }
   )
@@ -68,8 +67,7 @@ const CreateUser = () => {
 
   const onSubmit = async () => {
     const values = form.getValues()
-
-    router.post(`/admin/users`, values)
+    router.post(`/admin/users/`, values)
   }
   return (
     <AdminLayout>
