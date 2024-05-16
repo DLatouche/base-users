@@ -2,6 +2,7 @@ import type User from '#models/user'
 import { Meta, Order } from '@/components/generic_table/generic_table_type'
 import { InputSearch } from '@/components/input_search/input_search'
 import { AdminLayout } from '@/components/layouts/admin_layout/admin_layout'
+import { Button } from '@/components/ui/button'
 import UsersTable from '@/components/users/users_table'
 import { debounce } from '@/utils/debounce'
 import { router, usePage } from '@inertiajs/react'
@@ -116,12 +117,21 @@ const Users = () => {
     <AdminLayout>
       <div className="container">
         <h1 className="text-2xl font-semibold mb-4">Tableau de bord</h1>
-        <div className="my-4">
+        <div className="my-4 flex justify-between">
           <InputSearch
             initialValue={searchedValue}
             placeholder="Recherche par email ou pseudo..."
             onSearch={handleSearch}
           />
+          <Button
+            variant="outline"
+            className=""
+            onClick={() => {
+              router.visit(`/admin/users/create`)
+            }}
+          >
+            Créer un utilisateur
+          </Button>
         </div>
         <UsersTable
           usersPaginated={usersPaginated}

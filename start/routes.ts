@@ -53,6 +53,7 @@ router
     router
       .group(() => {
         router.get('/', [UsersController, 'showUsers'])
+        router.get('/create', [UsersController, 'showCreateUser'])
       })
       .prefix('users')
   })

@@ -21,4 +21,15 @@ export default class UsersController {
       return response.redirect().back()
     }
   }
+
+  async showCreateUser({ inertia, session, response, bouncer }: HttpContext) {
+    try {
+      if (!(await bouncer.allows(usersAdminBouncer))) throw new UnauthorizedException()
+      return inertia.render('admin/users/create_user')
+    } catch (error) {
+      session.flash(`errors.${error.code}`, error)
+      console.log('users.controller.ts (34) ->error', error)
+      return response.redirect().back()
+    }
+  }
 }
