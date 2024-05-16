@@ -1,18 +1,20 @@
+import { themes as themesEnum } from '../../enums/themes'
+
 export const themes = [
   {
-    value: 'theme-blue',
+    value: themesEnum.blue,
     label: 'Bleu',
   },
   {
-    value: 'theme-light-blue',
+    value: themesEnum.lightBlue,
     label: 'Bleu lumineux',
   },
   {
-    value: 'theme-purple',
+    value: themesEnum.purple,
     label: 'Violet',
   },
   {
-    value: 'theme-green',
+    value: themesEnum.green,
     label: 'Vert',
   },
 ]
