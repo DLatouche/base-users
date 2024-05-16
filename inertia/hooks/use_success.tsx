@@ -6,13 +6,13 @@ export const useSuccess = (props: any, key: string, defaultMessage?: string) => 
 
   useEffect(() => {
     const success = props.success
-
-    if (success && success[key]) {
+    if (success)
       console.log(
         '%cuse_success.tsx (11) -> sucesss',
         'background: #cddc39; color:#212121',
         success
       )
+    if (success && success[key]) {
       toast({
         description: defaultMessage || "Tout s'est bien passé.",
       })
