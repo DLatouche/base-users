@@ -114,7 +114,6 @@ export default class UsersService {
       })
       .orderBy(orderBy, order as 'asc' | 'desc')
       .paginate(page, perPage)
-    console.log('users.service.ts (117) ->orderBy', orderBy)
     return users
   }
 }
