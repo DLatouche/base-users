@@ -1,4 +1,4 @@
-import User from '#models/user'
+import type User from '#models/user'
 import { Avatar } from '@/components/avatar/avatar'
 import { MenuLayout } from '@/components/layouts/menu_layout.tsx/menu_layout'
 import { Button } from '@/components/ui/button'
@@ -23,7 +23,7 @@ import { useErrors } from '@/hooks/use_errors'
 import { useSuccess } from '@/hooks/use_success'
 import { avatars } from '@/utils/avatars'
 import { upperFirst } from '@/utils/strings'
-import { themes } from '@/utils/themes'
+import { themesList } from '@/utils/themes_list'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { router, usePage } from '@inertiajs/react'
@@ -217,7 +217,7 @@ const Account = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {themes.map((theme) => (
+                          {themesList.map((theme) => (
                             <SelectItem key={theme.value} value={theme.value}>
                               {theme.label}
                             </SelectItem>
