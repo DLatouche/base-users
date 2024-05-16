@@ -28,7 +28,7 @@ export const getAllUsersValidator = vine.compile(
     perPage: vine.number().optional(),
     orderBy: vine
       .string()
-      .in(['id', 'username', 'emailVerified', 'email', 'lastConnextion', 'updatedAt'])
+      .in(['id', 'username', 'emailVerified', 'email', 'lastConnexion', 'updatedAt'])
       .optional(),
     order: vine.string().in(['asc', 'desc']).optional(),
     searchQuery: vine.string().optional(),

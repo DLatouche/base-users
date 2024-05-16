@@ -127,6 +127,7 @@ const Users = () => {
         ),
       },
       {
+        sortable: true,
         id: 'lastConnexion',
         label: 'Dernière connexion',
         format: (value: string) => {
