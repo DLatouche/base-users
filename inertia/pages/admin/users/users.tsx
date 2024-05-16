@@ -27,13 +27,21 @@ type UsersProps = {
 }
 
 const Users = () => {
-  const { usersPaginated } = usePage<UsersProps>().props
+  const pageData = usePage<UsersProps>()
+  const {
+    props: { usersPaginated },
+    url,
+  } = pageData
 
-  const [searchedValue, setSearchValue] = useState('')
-  const [tempSearchValue, setTempSearchValue] = useState(searchedValue)
+  const urlParams = new URLSearchParams(url)
+  const initialSearchQuery = urlParams.get('searchQuery') || ''
+  const initialOrderBy = (urlParams.get('orderBy') as keyof User) || 'id'
+  const initialOrder = (urlParams.get('order') as Order) || 'asc'
 
-  const [orderBy, setOrderBy] = useState<keyof User>('id')
-  const [order, setOrder] = useState<Order>('asc')
+  const [searchedValue, setSearchValue] = useState(initialSearchQuery)
+  const [tempSearchValue, setTempSearchValue] = useState(initialSearchQuery)
+  const [orderBy, setOrderBy] = useState<keyof User>(initialOrderBy)
+  const [order, setOrder] = useState<Order>(initialOrder)
 
   const debouncedSearch = useCallback(
     debounce((value: string) => {
