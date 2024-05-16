@@ -31,7 +31,6 @@ export const BreadcrumbMenu = () => {
 
   useEffect(() => {
     const pathSegments = url.split('?')[0].split('/').filter(Boolean).slice(1)
-    console.log('breadcrumb_menu.tsx (26) ->pathSegments', pathSegments)
 
     let cumulativePath = '/admin'
     const currentBreads: BreadcrumbItem[] = []
