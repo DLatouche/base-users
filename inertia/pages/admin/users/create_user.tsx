@@ -29,6 +29,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { themes } from '../../../../enums/themes'
 import { themesList } from '@/utils/themes_list'
+import { roles } from '../../../../enums/roles'
 const formSchema = z
   .object({
     email: z.string().email(),
@@ -58,6 +59,7 @@ const CreateUser = () => {
       email: '',
       username: '',
       avatar: 'avatar_1',
+      roleId: roles.user.id,
       theme: themes.blue,
       password: '',
       rePassword: '',
@@ -121,7 +123,29 @@ const CreateUser = () => {
                       </FormItem>
                     )}
                   />
-
+                  <FormField
+                    control={form.control}
+                    name="roleId"
+                    render={({ field }) => (
+                      <FormItem className="my-4">
+                        <FormLabel>Role</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Role" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.values(roles).map((role) => (
+                              <SelectItem value={role.id} key={role.id}>
+                                {role.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="avatar"
