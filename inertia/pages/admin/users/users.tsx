@@ -1,12 +1,10 @@
 import User from '#models/user'
 import { GenericTable } from '@/components/generic_table/generic_table'
 import { Column, Order } from '@/components/generic_table/generic_table_type'
+import { InputSearch } from '@/components/input_search/input_search'
 import { AdminLayout } from '@/components/layouts/admin_layout/admin_layout'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { debounce } from '@/utils/debounce'
 import { router, usePage } from '@inertiajs/react'
-import { CircleX } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 type UsersProps = {
@@ -39,7 +37,6 @@ const Users = () => {
   const initialOrder = (urlParams.get('order') as Order) || 'asc'
 
   const [searchedValue, setSearchValue] = useState(initialSearchQuery)
-  const [tempSearchValue, setTempSearchValue] = useState(initialSearchQuery)
   const [orderBy, setOrderBy] = useState<keyof User>(initialOrderBy)
   const [order, setOrder] = useState<Order>(initialOrder)
 
@@ -66,17 +63,23 @@ const Users = () => {
     return () => debouncedSearch.cancel()
   }, [debouncedSearch])
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTempSearchValue(event.target.value)
-    debouncedSearch(event.target.value)
-  }
-
-  const handleClearSearch = () => {
-    setTempSearchValue('')
-    debouncedSearch.cancel() // Cancel any debounced calls
-    setSearchValue('')
-    router.visit('/admin/users', { method: 'get', data: { searchQuery: '' } })
-  }
+  const handleSearch = useCallback(
+    (value: string) => {
+      setSearchValue(value)
+      router.visit('/admin/users', {
+        method: 'get',
+        data: {
+          page: 1,
+          perPage: usersPaginated.meta.perPage,
+          orderBy: 'id',
+          order: 'asc',
+          searchQuery: value,
+        },
+        preserveState: true,
+      })
+    },
+    [usersPaginated.meta.perPage]
+  )
 
   const onChangePage = (currentPage: number) => {
     router.visit('/admin/users', {
@@ -150,23 +153,11 @@ const Users = () => {
       <div className="container">
         <h1 className="text-2xl font-semibold mb-4">Tableau de bord</h1>
         <div className="my-4">
-          <div className="flex items-center">
-            <Input
-              value={tempSearchValue}
-              onChange={handleInputChange}
-              placeholder="Recherche par email ou pseudo..."
-              className="max-w-[300px]"
-            />
-            {tempSearchValue && (
-              <Button
-                variant="ghost"
-                className="rounded-full px-1 py-1 inline-flex items-center justify-center size-10 ml-2 "
-                onClick={handleClearSearch}
-              >
-                <CircleX className="h-6 w-6" />
-              </Button>
-            )}
-          </div>
+          <InputSearch
+            initialValue={searchedValue}
+            placeholder="Recherche par email ou pseudo..."
+            onSearch={handleSearch}
+          />
         </div>
         <GenericTable<User>
           className="border rounded-md mt-4"
