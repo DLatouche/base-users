@@ -14,7 +14,7 @@ export default class UsersController {
       const data = await getAllUsersValidator.validate(request.all())
       const usersPaginated = await this.usersService.getAllUsers(data)
 
-      return inertia.render('admin/users/users', { usersPaginated })
+      return inertia.render('admin/users/users', { usersPaginated: usersPaginated.serialize() })
     } catch (error) {
       session.flash(`errors.${error.code}`, error)
       console.log('users.controller.ts (8) ->error', error)
