@@ -61,11 +61,11 @@ const Login = () => {
       password: data.password,
       captcha: token,
     }
-    router.post(`/auth/email/login${isAdmin && '?source=admin'}`, payload)
+    router.post(`/auth/email/login${isAdmin ? '?source=admin' : ''}`, payload)
   }
 
   const loginGoogle = () => {
-    window.location.href = `${window.location.origin}/auth/google/redirect${isAdmin && '?source=admin'}`
+    window.location.href = `${window.location.origin}/auth/google/redirect${isAdmin ? '?source=admin' : ''}`
   }
   return (
     <MenuLayout className="!pt-0 h-screen">
