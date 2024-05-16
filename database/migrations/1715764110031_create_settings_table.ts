@@ -8,12 +8,7 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.string('id').unique().primary()
-      table
-        .string('user_id')
-        .references('id')
-        .inTable('users')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE')
+      table.string('user_id').references('id').inTable('users').onDelete('CASCADE')
       table.string('theme').notNullable().defaultTo('theme-blue')
       table.boolean('menu_expanded').notNullable().defaultTo(true)
       table.timestamp('updated_at')
