@@ -81,7 +81,7 @@ const CreateUser = () => {
                 className="mr-4"
                 type="button"
                 onClick={() => {
-                  router.visit('/')
+                  router.visit('/admin/users')
                 }}
               >
                 Retour
