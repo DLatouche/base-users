@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo } from 'react'
-import User from '#models/user'
+import type User from '#models/user'
 import { GenericTable } from '@/components/generic_table/generic_table'
 import { Column, Meta, Order } from '@/components/generic_table/generic_table_type'
 import { router } from '@inertiajs/react'
+import { TableActions } from './table_actions'
 
 type UsersTableProps = {
   usersPaginated: {
@@ -14,6 +15,7 @@ type UsersTableProps = {
   onChangePage: (currentPage: number) => void
   onChangeRowsPerPage: (currentRowsPerPage: number) => void
   onSort: (currentSortBy: keyof User, currentSortOrder: Order) => void
+  currentUser: User
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({
@@ -23,6 +25,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
   onChangePage,
   onChangeRowsPerPage,
   onSort,
+  currentUser,
 }) => {
   const columns = useMemo<Column<User>[]>(() => {
     return [
@@ -65,6 +68,9 @@ const UsersTable: React.FC<UsersTableProps> = ({
       page={usersPaginated.meta.currentPage}
       rowsPerPage={usersPaginated.meta.perPage ?? 0}
       columns={columns}
+      ActionsComponent={({ item }: { item: User }) => (
+        <TableActions user={item} currentUser={currentUser} />
+      )}
     />
   )
 }

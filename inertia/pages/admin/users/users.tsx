@@ -13,12 +13,13 @@ type UsersProps = {
     data: User[]
     meta: Meta
   }
+  user: User
 }
 
 const Users = () => {
   const pageData = usePage<UsersProps>()
   const {
-    props: { usersPaginated },
+    props: { usersPaginated, user },
     url,
   } = pageData
 
@@ -140,6 +141,7 @@ const Users = () => {
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
           onSort={handleSort}
+          currentUser={user}
         />
       </div>
     </AdminLayout>
