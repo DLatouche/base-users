@@ -5,6 +5,7 @@ import SettingsService from '#services/settings.service'
 import UsersService from '#services/users.service'
 import {
   createUserAdminValidator,
+  deleteUserValidator,
   getAllUsersValidator,
   updateUserAdminValidator,
 } from '#validators/users.validator'
@@ -86,6 +87,20 @@ export default class UsersController {
     } catch (error) {
       session.flash(`errors.${error.code}`, error)
       console.log('users.controller.ts (79) ->error', error)
+      return response.redirect().back()
+    }
+  }
+
+  async deleteUser({ session, response, bouncer, request }: HttpContext) {
+    try {
+      if (!(await bouncer.allows(usersAdminBouncer))) throw new UnauthorizedException()
+      const data = await deleteUserValidator.validate(request.all())
+      await this.usersService.deleteUser(data)
+      session.flash(`success.deleteUser`, 'Utilisateur supprimé')
+      return response.redirect().back()
+    } catch (error) {
+      session.flash(`errors.${error.code}`, error)
+      console.log('users.controller.ts (103) ->error', error)
       return response.redirect().back()
     }
   }

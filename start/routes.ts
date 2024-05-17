@@ -57,6 +57,7 @@ router
         router.get('/create', [UsersController, 'showCreateUser'])
         router.get('/edit/:userId', [UsersController, 'showEditUser'])
         router.patch('/', [UsersController, 'editUser'])
+        router.delete('/', [UsersController, 'deleteUser'])
       })
       .prefix('users')
   })

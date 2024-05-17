@@ -1,10 +1,5 @@
 import User from '#models/user'
-import {
-  CreateUser,
-  CreateUserAdmin,
-  GetAllUsers,
-  UpdateUserAdmin,
-} from '#validators/users.validator'
+import { CreateUser, CreateUserAdmin, DeleteUser, GetAllUsers } from '#validators/users.validator'
 import { cuid } from '@adonisjs/core/helpers'
 import { roles } from '../../enums/roles.js'
 import SettingsService from './settings.service.js'
@@ -148,5 +143,10 @@ export default class UsersService {
       .orderBy(orderBy, order as 'asc' | 'desc')
       .paginate(page, perPage)
     return users
+  }
+
+  async deleteUser({ userId }: DeleteUser) {
+    const user = await User.findOrFail(userId)
+    await user.delete()
   }
 }

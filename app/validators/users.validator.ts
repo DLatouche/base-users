@@ -64,3 +64,10 @@ export const getAllUsersValidator = vine.compile(
   })
 )
 export type GetAllUsers = Infer<typeof getAllUsersValidator>
+
+export const deleteUserValidator = vine.compile(
+  vine.object({
+    userId: vine.string().trim().escape(),
+  })
+)
+export type DeleteUser = Infer<typeof deleteUserValidator>
