@@ -26,7 +26,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { router, usePage } from '@inertiajs/react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { themes } from '../../../../enums/themes'
 import { themesList } from '@/utils/themes_list'
 import { roles } from '../../../../enums/roles'
 import User from '#models/user'
@@ -61,7 +60,6 @@ const EditUser = () => {
   //For now we only have one provider by user
   const isEmailProvider = userEditing.auths[0].providerName === providers.email
 
-  console.log('edit_user.tsx (59) ->user', userEditing)
   useSuccess(usePage().props, 'editUser', 'Modifications réussie')
   useErrors(usePage().props, "Erreur lors de la modification de l'utilisateur")
 
@@ -81,12 +79,11 @@ const EditUser = () => {
   const onSubmit = async () => {
     // Add email and password only if the provider is email
     const { email, password, ...otherData } = form.getValues()
+
     router.patch(`/admin/users/`, {
-      data: {
-        ...otherData,
-        ...(isEmailProvider && { email, password }),
-        userId: userEditing.id,
-      },
+      ...otherData,
+      ...(isEmailProvider && { email, password }),
+      id: userEditing.id,
     })
   }
   return (
