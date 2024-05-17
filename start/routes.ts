@@ -55,6 +55,7 @@ router
         router.get('/', [UsersController, 'showUsers'])
         router.post('/', [UsersController, 'createUser'])
         router.get('/create', [UsersController, 'showCreateUser'])
+        router.get('/edit/:userId', [UsersController, 'showEditUser'])
       })
       .prefix('users')
   })

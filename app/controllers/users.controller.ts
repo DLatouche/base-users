@@ -1,4 +1,5 @@
 import { usersAdminBouncer } from '#abilities/users.bouncer'
+import NotFoundException from '#exceptions/not_found_exception'
 import UnauthorizedException from '#exceptions/unauthorised_exception'
 import UsersService from '#services/users.service'
 import { createUserAdminValidator, getAllUsersValidator } from '#validators/users.validator'
@@ -29,6 +30,23 @@ export default class UsersController {
     } catch (error) {
       session.flash(`errors.${error.code}`, error)
       console.log('users.controller.ts (34) ->error', error)
+      return response.redirect().back()
+    }
+  }
+
+  async showEditUser({ inertia, session, response, bouncer, request }: HttpContext) {
+    try {
+      if (!(await bouncer.allows(usersAdminBouncer))) throw new UnauthorizedException()
+
+      const userId = request.params().userId
+      if (!userId) throw new NotFoundException('userId not found')
+
+      const userEditing = await this.usersService.getUserById(userId)
+
+      return inertia.render('admin/users/edit_user', { userEditing })
+    } catch (error) {
+      session.flash(`errors.${error.code}`, error)
+      console.log('users.controller.ts (42) ->error', error)
       return response.redirect().back()
     }
   }
