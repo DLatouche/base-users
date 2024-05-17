@@ -68,6 +68,7 @@ router
   .group(() => {
     router.get('/', [AccountController, 'showAccount'])
     router.patch('/', [AccountController, 'updateAccount'])
+    router.delete('/', [AccountController, 'deleteAccount'])
   })
   .prefix('account/')
   .use(middleware.auth())

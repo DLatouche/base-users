@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useConfirm } from '@/hooks/use_confirm'
 import { useErrors } from '@/hooks/use_errors'
 import { useSuccess } from '@/hooks/use_success'
 import { avatars } from '@/utils/avatars'
@@ -52,7 +53,9 @@ const Account = () => {
 
   useSuccess(usePage().props, 'account', 'Mise à jour réussie')
   useErrors(usePage().props, 'Erreur lors de la mise à jour de votre compte')
-
+  const { ConfirmDialog, askConfirmation } = useConfirm({
+    title: 'Suppression de compte',
+  })
   const isEmailProvider = user.auths[0].providerName === 'email'
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -81,8 +84,22 @@ const Account = () => {
     router.patch(`/account`, userData)
   }
 
+  const handleDeleteUser = () => {
+    askConfirmation({
+      message: `Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.`,
+      onConfirm: () => {
+        onDeleteUser()
+      },
+    })
+  }
+  const onDeleteUser = () => {
+    router.delete(`/account`, { data: { userId: user.id } })
+  }
+
   return (
     <MenuLayout className="container">
+      <ConfirmDialog />
+
       <h1 className="text-2xl font-semibold mb-4">Mon compte</h1>
 
       <Form {...form}>
@@ -227,6 +244,11 @@ const Account = () => {
                     </FormItem>
                   )}
                 />
+                <hr className="my-4 mt-8" />
+                <p className="mb-4 text-muted-foreground">Suppression du compte</p>
+                <Button onClick={handleDeleteUser} variant="destructive">
+                  Supprimer mon compte
+                </Button>
               </CardContent>
             </Card>
           </div>

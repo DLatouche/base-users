@@ -5,6 +5,7 @@ import UnauthorizedException from '#exceptions/unauthorised_exception'
 import UsersService from '#services/users.service'
 import { editUserBouncer } from '#abilities/users.bouncer'
 import SettingsService from '#services/settings.service'
+import { deleteUserValidator } from '#validators/users.validator'
 
 @inject()
 export default class AccountController {
@@ -34,6 +35,22 @@ export default class AccountController {
     } catch (error) {
       session.flash(`errors.${error.code}`, error)
       console.log('account.controller.ts (22) -> error', error)
+      return response.redirect().back()
+    }
+  }
+
+  async deleteAccount({ response, bouncer, session, request, auth }: HttpContext) {
+    try {
+      const data = await deleteUserValidator.validate(request.all())
+      const userToDelete = await this.usersServices.getUserById(data.userId)
+      if (!(await bouncer.allows(editUserBouncer, userToDelete))) throw new UnauthorizedException()
+      await auth.use('web').logout()
+      await this.usersServices.deleteUser(data)
+      session.flash(`success.account`, 'Compte supprimé')
+      return response.redirect().toRoute('/')
+    } catch (error) {
+      session.flash(`errors.${error.code}`, error)
+      console.log('account.controller.ts (52) ->error', error)
       return response.redirect().back()
     }
   }
