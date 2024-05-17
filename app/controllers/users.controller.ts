@@ -1,14 +1,22 @@
 import { usersAdminBouncer } from '#abilities/users.bouncer'
 import NotFoundException from '#exceptions/not_found_exception'
 import UnauthorizedException from '#exceptions/unauthorised_exception'
+import SettingsService from '#services/settings.service'
 import UsersService from '#services/users.service'
-import { createUserAdminValidator, getAllUsersValidator } from '#validators/users.validator'
+import {
+  createUserAdminValidator,
+  getAllUsersValidator,
+  updateUserAdminValidator,
+} from '#validators/users.validator'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
 @inject()
 export default class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private settingsService: SettingsService
+  ) {}
   async showUsers({ inertia, session, response, bouncer, request }: HttpContext) {
     try {
       if (!(await bouncer.allows(usersAdminBouncer))) throw new UnauthorizedException()
@@ -62,6 +70,22 @@ export default class UsersController {
     } catch (error) {
       session.flash(`errors.${error.code}`, error)
       console.log('users.controller.ts (42) ->error', error)
+      return response.redirect().back()
+    }
+  }
+
+  async editUser({ session, response, bouncer, request }: HttpContext) {
+    try {
+      if (!(await bouncer.allows(usersAdminBouncer))) throw new UnauthorizedException()
+      const data = await updateUserAdminValidator.validate(request.all())
+      const { theme, ...userData } = data
+      await this.usersService.updateAccount(userData)
+      await this.settingsService.updateSettings({ userId: data.id, theme })
+      session.flash(`success.editUser`, 'Utilisateur mis à jour')
+      return response.redirect('/admin/users/')
+    } catch (error) {
+      session.flash(`errors.${error.code}`, error)
+      console.log('users.controller.ts (79) ->error', error)
       return response.redirect().back()
     }
   }

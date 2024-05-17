@@ -38,6 +38,19 @@ export const createUserAdminValidator = vine.compile(
 )
 export type CreateUserAdmin = Infer<typeof createUserAdminValidator>
 
+export const updateUserAdminValidator = vine.compile(
+  vine.object({
+    id: vine.string().trim().escape(),
+    email: vine.string().email().trim().escape().optional(),
+    username: vine.string().minLength(3).trim().escape(),
+    roleId: vine.string().in(roleIds).optional(),
+    avatar: vine.string().optional(),
+    password: vine.string().minLength(8).escape().optional(),
+    theme: vine.string().in(themeValues).optional(),
+  })
+)
+export type UpdateUserAdmin = Infer<typeof updateUserAdminValidator>
+
 export const getAllUsersValidator = vine.compile(
   vine.object({
     page: vine.number().optional(),

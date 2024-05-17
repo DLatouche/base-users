@@ -1,5 +1,10 @@
 import User from '#models/user'
-import { CreateUser, CreateUserAdmin, GetAllUsers } from '#validators/users.validator'
+import {
+  CreateUser,
+  CreateUserAdmin,
+  GetAllUsers,
+  UpdateUserAdmin,
+} from '#validators/users.validator'
 import { cuid } from '@adonisjs/core/helpers'
 import { roles } from '../../enums/roles.js'
 import SettingsService from './settings.service.js'
