@@ -4,6 +4,8 @@ import { InputSearch } from '@/components/input_search/input_search'
 import { AdminLayout } from '@/components/layouts/admin_layout/admin_layout'
 import { Button } from '@/components/ui/button'
 import UsersTable from '@/components/users/users_table'
+import { useErrors } from '@/hooks/use_errors'
+import { useSuccess } from '@/hooks/use_success'
 import { debounce } from '@/utils/debounce'
 import { router, usePage } from '@inertiajs/react'
 import { useCallback, useEffect, useState } from 'react'
@@ -22,6 +24,8 @@ const Users = () => {
     props: { usersPaginated, user },
     url,
   } = pageData
+  useErrors(pageData.props, "Une erreur est survenue lors de la suppression de l'utilisateur.")
+  useSuccess(pageData.props, 'deleteUser', "L'utilisateur a été surpprimé avec succès.")
 
   const urlParams = new URLSearchParams(url)
   const initialSearchQuery = urlParams.get('searchQuery') || ''
